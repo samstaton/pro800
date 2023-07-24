@@ -235,9 +235,9 @@ cell.appendChild(text);}
 info.appendChild(table);
 printInfo("Decoded patch data:");
 dumpInfo(bytesToStr(data));
-printInfo("Patch sysex:");
+printInfo("Patch system exclusive data:");
 dumpInfo(bytesToStr(patchSysex));
-printInfo("Device sysex:");
+printInfo("Device system exclusive data:");
 dumpInfo(bytesToStr(deviceSysex));
 }
 
@@ -332,7 +332,7 @@ flex:1;
     </header>
     <main id="info"></main>
     <hr>
-    Sysex console:
+    MIDI hex console:
   <editor id="shell"></editor>
 </body>
 </html>
