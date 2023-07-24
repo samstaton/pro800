@@ -3,7 +3,7 @@
 Attempt at reconstructing by
 [Sam](https://github.com/samstaton/pro800).
 
-###System exclusive head
+### System exclusive head
 Every system exclusive message has the following format:
 
 `F0 00 20 32 00 01 24 00 Data F7`
