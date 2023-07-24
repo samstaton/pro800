@@ -214,22 +214,43 @@ bytesToStr = x => x.reduce(function(s, z) {
               {return s + " " + z.toString(16).padStart(2, "0");}
 }, "");
 
-ctsParams = ["Freq A","Vol A","PWA","Freq B","Vol B","PWB","Fine B","Cutoff","Res","Filt Env","FE R","FE S","FE D","FE A","AE R","AE S","AE D","AE A","PM Env","PM OscB","LFO Freq","LFO Amt","Glide","Amp Vel","Filt Vel"];
+params = ["Freq A","Vol A","PWA","Freq B","Vol B","PWB","Fine B","Cutoff","Res","Filt Env","FE R","FE S","FE D","FE A","AE R","AE S","AE D","AE A","PM Env","PM OscB","LFO Freq","LFO Amt","Glide","Amp Vel","Filt Vel","Saw A","Tri A","Sqr A","Saw B","Tri B","Sqr B","Sync","PM Freq","PM Filt","LFO Shape","???","LFO Target","KeyTrk","FE Shape","FE Speed","AE Shape","NonUnison","AE Speed"];
+
+
+lfoTargets=[];
+for (var i = 0; i <= 63; i++) {
+  lfoTargets.push(i.toString(2).padStart(6,"0"));
+}
+
+
+
+paramType = [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0,
+1,1,1,1,1,1 ,1,1,1, ["Pulse","Tri","Rand","Sin","Noise","Saw"],1,lfoTargets, ["Off","Half","Full"], ["Lin","Exp"],["Fast","Slow"], ["Lin","Exp"],1,["Fast","Slow"]];
 
 function updateInfo() {
 info.innerHTML="";
 data=midiToHex(patchSysex.slice(11,patchSysex.length)) ;
-patchName=String.fromCharCode.apply(String,(data.map(x => {if(x==1){return 0}else{return x}}).slice(data.length-16,data.length)));
+patchName=String.fromCharCode.apply(String,data.slice(0x96,0x96+data.slice(0x96).indexOf(0)));
 function printInfo(str) {line = document.createElement("p"); line.textContent = str;line.style.fontWeight="bold";info.appendChild(line);} 
 function dumpInfo(str) {line = document.createElement("PRE"); line.textContent = str; line.color="green";         line.style.whiteSpace = "pre-wrap";
  info.appendChild(line);} 
 printInfo("Current patch: "+(patch[1]*0x80+patch[0]).toString(10).padStart(3,"0")+" \""+patchName+"\"");
 table=document.createElement("table");
-for(i=0;i<ctsParams.length;i+=6){
+k=5;
+for(i=0;i<params.length;i+=6){
 row = table.insertRow();
 for(j=0;j<6;j++){
 cell = row.insertCell();
-if(i+j<ctsParams.length){text = document.createTextNode(ctsParams[i+j]+": "+(100*((data[2*(i+j)+6]*0x100+data[2*(i+j)+5])/(0xFFFF))).toFixed(1).toString(10)+"%  ");
+if(i+j<params.length){
+switch(paramType[i+j]){
+case 0:
+text = document.createTextNode(params[i+j]+": "+(100*((data[k+1]*0x100+data[k])/(0xFFFF))).toFixed(1).toString(10)+"%  ");
+k+=2;break;
+ case 1:
+text = document.createTextNode(params[i+j]+": "+(data[k]?"off":"on")+" ");k++;break;
+default:
+text = document.createTextNode(params[i+j]+": "+paramType[i+j][data[k]]);k++;
+};
 cell.appendChild(text);}
 }}
 info.appendChild(table);

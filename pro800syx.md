@@ -47,6 +47,7 @@ Patch data `details` has the following format.
 
 * MIDI system exclusive data is 7 bits (00-7F), but Pro 800 data uses 8-bit bytes. These bytes are encoded as follows. Each sequence of seven bytes `x1 x2 x3 x4 x5 x6 x7` is preceeded by a byte `x0` that specifies the MSBs of the following seven bytes. The MSB of `x0` specifies the MSB of `x7`; the LSB of `x0` specifies the MSB of `x1`, and so on. 
 * This encoding is similar to the one used by GliGli Pro 600 but seems different. 
-* Once decoded, from offset 5, the `details` seems to appear in the order used by GliGli. There are a different number of fields, and these vary by patch, but mostly the patch name is at the end. 
+* Once decoded, from offset 5, the `details` seems to appear in the order used by GliGli. 
+* The patch name seems to start at index 150 (0x96) and continue until the first 0. The length varies. After the patch name there is sometimes further data (arpeggiator? sequencer)
 * Reference for GliGli midi at [https://www.image-et-son.com](https://www.image-et-son.com). 
 
