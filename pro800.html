@@ -223,13 +223,13 @@ patchName=String.fromCharCode.apply(String,(data.map(x => {if(x==1){return 0}els
 function printInfo(str) {line = document.createElement("p"); line.textContent = str;line.style.fontWeight="bold";info.appendChild(line);} 
 function dumpInfo(str) {line = document.createElement("PRE"); line.textContent = str; line.color="green";         line.style.whiteSpace = "pre-wrap";
  info.appendChild(line);} 
-printInfo("Current patch: "+(patch[1]*0x7f+patch[0]).toString(10).padStart(3,"0")+" \""+patchName+"\"");
+printInfo("Current patch: "+(patch[1]*0x80+patch[0]).toString(10).padStart(3,"0")+" \""+patchName+"\"");
 table=document.createElement("table");
 for(i=0;i<ctsParams.length;i+=6){
 row = table.insertRow();
 for(j=0;j<6;j++){
 cell = row.insertCell();
-if(i+j<ctsParams.length){text = document.createTextNode(ctsParams[i+j]+": "+(100*((data[2*(i+j)+6]*0xFF+data[2*(i+j)+5])/(0xFFFF))).toFixed(1).toString(10)+"%  ");
+if(i+j<ctsParams.length){text = document.createTextNode(ctsParams[i+j]+": "+(100*((data[2*(i+j)+6]*0x100+data[2*(i+j)+5])/(0xFFFF))).toFixed(1).toString(10)+"%  ");
 cell.appendChild(text);}
 }}
 info.appendChild(table);
