@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<!-- With thanks to https://arachsys.github.io/webmidi/
+--> 
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="Chris Webb, chris@arachsys.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pro 800 Patch Data</title>
+
+  <script>
+    async function midi(rxchooser, txchooser, receive) {
+      let access, input, output;
+
+      try {
+        access = await navigator.requestMIDIAccess({sysex: true});
+      } catch {
+        return null;
+      }
+
+      rxchooser = rxchooser(function(id) {
+        if (input && input.id != id && receive)
+          input.removeEventListener("midimessage", receive);
+        input = access.inputs.get(id);
+        if (input && receive)
+          input.addEventListener("midimessage", receive);
+      });
+
+      txchooser = txchooser(function(id) {
+        output = access.outputs.get(id);
+      });
+
+      access.addEventListener("statechange", function(event) {
+        const id = event.port.id, state = event.port.state;
+        const name = state == "connected" ? event.port.name : null;
+        if (event.port.type == "input")
+          rxchooser(id, name);
+        else if (event.port.type == "output")
+          txchooser(id, name);
+      });
+
+      access.inputs.forEach(port => rxchooser(port.id, port.name));
+      access.outputs.forEach(port => txchooser(port.id, port.name));
+      return data => output && output.send(data);
+    }
+
+    function chooser(select) {
+      select = document.getElementById(select);
+      return function(choose) {
+        select.onchange = event => choose(select.value);
+        return function(id, name) {
+          for (let option = 0; option < select.length; option++)
+            if (select.options[option].value == id) {
+              if (name) {
+                if (select.options[option].text != name)
+                  select.options[option].text = name;
+                return;
+              }
+              select.options[option].remove(option);
+            }
+          if (name) {
+            const option = document.createElement("option");
+            option.value = id;
+            option.text = name;
+            select.add(option);
+          }
+          choose(select.value);
+        };
+      };
+    }
+
+    function shell(container, handler) {
+      const input = document.createElement("input");
+      const prompt = document.createElement("p");
+      let history = [], buffer = [""], index = 0;
+
+      function print(message, color, fixedwidth=false) {
+line = document.createElement("p");
+        line.textContent = message;
+line.style.color = color;
+        line.style.whiteSpace = "pre-wrap";
+        container.insertBefore(line, prompt);
+        prompt.scrollIntoView();
+      };
+
+      input.setAttribute("autofocus", "true");
+      input.setAttribute("spellcheck", "false");
+      input.style.margin = input.style.padding = 0;
+      input.style.border = input.style.outline = 0;
+      input.style.flex = 1;
+      input.style.font = "inherit";
+
+      prompt.innerHTML = "&gt;&nbsp;";
+      prompt.style.display = "flex";
+      prompt.appendChild(input);
+      container.appendChild(prompt);
+
+      input.addEventListener("keydown", event => {
+        if (event.key == "Enter") {
+          print("> " + input.value, null);
+          if (input.value.trim()) {
+            history.push(input.value);
+            if (handler)
+              handler(input.value);
+          }
+          input.value = "";
+          buffer = history.concat([""]);
+          index = history.length;
+        } else if (event.key == "ArrowUp") {
+          buffer[index] = input.value;
+          if (index > 0)
+            input.value = buffer[--index];
+          event.preventDefault();
+        } else if (event.key == "ArrowDown") {
+          buffer[index] = input.value;
+          if (index + 1 < buffer.length)
+            input.value = buffer[++index];
+          event.preventDefault();
+        }
+      });
+
+      for (type of ["focus", "keypress", "paste"])
+        window.addEventListener(type, event => input.focus());
+      return print;
+    }
+
+document.addEventListener("DOMContentLoaded", async function() {
+lastMsg = [];
+eventReceiver = (x) => x;
+const log = document.getElementById("shell");
+const info = document.getElementById("info");
+      const shellprint = shell(log, send);
+      const error = message => shellprint(message, "red");
+      const transmit = await midi(chooser("rx"), chooser("tx"), receive);
+
+      function send(line) {
+        const words = line.split(/\s+/).filter(Boolean);
+        if (words[0] == "clear") {
+          while (log.childNodes.length > 1)
+            log.removeChild(log.firstChild);
+          return;
+        }
+
+        const bytes = words.map(x => Number("0x" + x));
+        if (bytes.some(x => isNaN(x) || x > 0xff))
+          return error("Invalid byte sequence: " + line.trim());
+        else if (bytes[0] & 0x80 == 0)
+          return error("Commands must start with a status byte");
+        else if (bytes[0] == 0xf0 && bytes[bytes.length - 1] != 0xf7)
+          return error("System exclusive messages must end with f7");
+
+        try {
+          if (transmit && bytes.length > 0)
+            transmit(bytes);
+        } catch {
+          error("Invalid MIDI command: " + line.trim());
+        }
+      }
+
+function receive(event) {
+if(jobs.length==0){
+        const filter = document.getElementById("filter").value;
+        if (filter != "exclusive" || event.data[0] == 0xf0)
+          if (filter != "common" || event.data[0] < 0xf8)
+            shellprint(event.data.reduce(function(s, x) {
+              return s + " " + x.toString(16).padStart(2, "0");
+}, "").slice(1), "green");
+}
+else
+{f = jobs.shift();
+f(event.data);
+}
+if(event.data[0]==0xb0){refreshInfo()}
+      }
+
+function strToBytes(str) {
+const words = str.split(/\s+/).filter(Boolean);
+const bytes = words.map(x => Number("0x" + x));
+return bytes;
+}
+
+function midiToHex(bytes) {
+hex = [];
+j = 0;
+for(i=0 ; i < bytes.length -1; i++){
+if(i % 8==0){
+for(k=0; k< 7;k++){
+if(i+k+1 < bytes.length -1) {
+hex[j+k]=((Math.trunc(bytes[i] / (2 ** k))) & 1)*0x80;}
+}}
+else
+{
+hex[j]+=bytes[i];
+j++;
+}
+};
+return hex;}
+
+patch=[];
+firmware = "";
+deviceSysex = [];
+patchSysex = [];
+jobs=[];
+
+      if (transmit == null)
+        return error("Web MIDI not supported or port access refused");
+      if (document.getElementById("rx").childNodes.length == 0)
+        error("Warning: no MIDI inputs found");
+      if (document.getElementById("tx").childNodes.length == 0)
+error("Warning: no MIDI outputs found");
+
+bytesToStr = x => x.reduce(function(s, z) {
+              if(s==""){return  z.toString(16).padStart(2, "0");}
+              {return s + " " + z.toString(16).padStart(2, "0");}
+}, "");
+
+ctsParams = ["Freq A","Vol A","PWA","Freq B","Vol B","PWB","Fine B","Cutoff","Res","Filt Env","FE R","FE S","FE D","FE A","AE R","AE S","AE D","AE A","PM Env","PM OscB","LFO Freq","LFO Amt","Glide","Amp Vel","Filt Vel"];
+
+function updateInfo() {
+info.innerHTML="";
+data=midiToHex(patchSysex.slice(11,patchSysex.length)) ;
+patchName=String.fromCharCode.apply(String,(data.map(x => {if(x==1){return 0}else{return x}}).slice(data.length-16,data.length)));
+function printInfo(str) {line = document.createElement("p"); line.textContent = str;line.style.fontWeight="bold";info.appendChild(line);} 
+function dumpInfo(str) {line = document.createElement("PRE"); line.textContent = str; line.color="green";         line.style.whiteSpace = "pre-wrap";
+ info.appendChild(line);} 
+printInfo("Current patch: "+(patch[1]*0x7f+patch[0]).toString(10).padStart(3,"0")+" \""+patchName+"\"");
+table=document.createElement("table");
+for(i=0;i<ctsParams.length;i+=6){
+row = table.insertRow();
+for(j=0;j<6;j++){
+cell = row.insertCell();
+if(i+j<ctsParams.length){text = document.createTextNode(ctsParams[i+j]+": "+(100*((data[2*(i+j)+6]*0xFF+data[2*(i+j)+5])/(0xFFFF))).toFixed(1).toString(10)+"%  ");
+cell.appendChild(text);}
+}}
+info.appendChild(table);
+printInfo("Decoded patch data:");
+dumpInfo(bytesToStr(data));
+printInfo("Patch sysex:");
+dumpInfo(bytesToStr(patchSysex));
+printInfo("Device sysex:");
+dumpInfo(bytesToStr(deviceSysex));
+}
+
+function refreshInfo() {
+jobs.push(
+ x => {firmware = x[10].toString(10) +"."+x[11].toString(10)+"."+x[12].toString(10);
+transmit(strToBytes("F0 00 20 32 00 01 24 00 77 7E 03 F7"));});
+
+jobs.push(
+x => { patch = [x[17],x[18]]; deviceSysex=x;
+transmit(strToBytes("F0 00 20 32 00 01 24 00 77 "+patch[0].toString(16) .padStart(2,"0")+" "+patch[1].toString(16).padStart(2,"0")+" F7"));});
+
+jobs.push(x => {patchSysex = x; updateInfo()});
+
+transmit(strToBytes("F0 00 20 32 00 01 24 00 08 00 F7"));
+}
+
+refreshInfo();
+
+
+}); 
+
+  </script>
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+overflow-y: hidden;
+font-family: system-ui, sans-serif;
+padding: 4px;
+margin: 4px;
+flex:1;
+    }
+
+    header {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      padding: 4px;
+      font-family: system-ui, sans-serif;
+    }
+
+    header > * {
+      margin: 4px;
+    }
+
+    header #title {
+      flex: 1;
+      color: inherit;
+      font-weight: bold;
+      text-decoration: inherit;
+    }
+
+    header select:empty {
+      visibility: hidden;
+    }
+
+    td {      flex: 1;
+      padding: 8px;       overflow-y: auto;
+
+}
+    main {    flex: 2;
+      padding: 0 8px;       overflow-y: auto;
+
+}
+    editor {30%;
+      flex: 1;
+      padding: 0 8px;
+      font-family: monospace;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <a href="https://github.com/samstaton/pro800" id="title">
+      Pro 800 Patch Viewer
+    </a>
+    <select id="rx" title="MIDI Receive Port"></select>
+    <select id="tx" title="MIDI Transmit Port"></select>
+    <select id="filter" title="Display Filter">
+      <option value="exclusive">System Exclusive</option>
+      <option value="common">Channel &amp; Common</option>
+      <option value="realtime">All Messages</option>
+    </select>
+    </header>
+    <main id="info"></main>
+    <hr>
+    Sysex console:
+  <editor id="shell"></editor>
+</body>
+</html>
