@@ -286,7 +286,7 @@ jobs = [];
 
 // Known parameters in Pro 800 Midi Sysex, in order.
 // From https://github.com/samstaton/pro800/blob/main/pro800syx.md
-params = ["Freq A", "Vol A", "PWA", "Freq B", "Vol B", "PWB", "Fine B", "Cutoff", "Res", "Filt Env", "FE R", "FE S", "FE D", "FE A", "AE R", "AE S", "AE D", "AE A", "PM Env", "PM OscB", "LFO Freq", "LFO Amt", "Glide", "Amp Vel", "Filt Vel", "Saw A", "Tri A", "Sqr A", "Saw B", "Tri B", "Sqr B", "Sync", "PM Freq", "PM Filt", "LFO Shape", "???", "LFO Target", "KeyTrk", "FE Shape", "FE Speed", "AE Shape", "NonUnison", "AE Speed"];
+params = ["Freq A", "Vol A", "PWA", "Freq B", "Vol B", "PWB", "Fine B", "Cutoff", "Res", "Filt Env", "FE R", "FE S", "FE D", "FE A", "AE R", "AE S", "AE D", "AE A", "PM Env", "PM OscB", "LFO Freq", "LFO Amt", "Glide", "Amp Vel", "Filt Vel", "Saw A", "Tri A", "Sqr A", "Saw B", "Tri B", "Sqr B", "Sync", "PM Freq", "PM Filt", "LFO Shape", "???", "LFO Target", "KeyTrk", "FE Shape", "FE Speed", "AE Shape", "Unison", "AE Speed"];
 
 
 // Array of possible lfo targets
@@ -357,7 +357,7 @@ function updateInfo() {
             k += 2;
             break;
           case 1: // 1-byte param, on off
-            text = document.createTextNode(params[i + j] + ": " + (patchData[k] ? "off" : "on") + " ");
+            text = document.createTextNode(params[i + j] + ": " + (patchData[k] ? "on" : "off") + " ");
             k++;
             break;
           default: // 1-byte param, value from list

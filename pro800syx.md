@@ -95,7 +95,7 @@ Patch data `details` has the following format.
 |68|FE Shape|1|Stepped|Lin,Exp|
 |69|FE Speed|1|Stepped|Fast,Slow|
 |70|AE Shape|1|Stepped|Lin,Exp|
-|71|NonUnison|1|Stepped|Off,On|
+|71|Unison|1|Stepped|Off,On|
 |72|AE Speed|1|Stepped|Fast,Slow|
 |150|Patch name|??|Text, delimited by 0||
 
