@@ -310,6 +310,8 @@ paramType = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
 // Display the patch information in the info box
 function updateInfo() {
+  const contdisplay = document.getElementById("contdisplay").value;
+
   info.innerHTML = "";
   // data seems to start at position 11 in the sysex data 
   patchData = midiToBytes(patchSysex.slice(11, patchSysex.length));
@@ -353,7 +355,14 @@ function updateInfo() {
       if (i + j < params.length) {
         switch (paramType[i + j]) {
           case 0: // continuous 2-byte param
-            text = document.createTextNode(params[i + j] + ": " + (100 * ((patchData[k + 1] * 0x100 + patchData[k]) / (0xFFFF))).toFixed(1).toString(10) + "%  ");
+            switch (contdisplay) {
+              case "percent": 
+                text = document.createTextNode(params[i + j] + ": " + (100 * ((patchData[k + 1] * 0x100 + patchData[k]) / (0xFFFF))).toFixed(1).toString(10) + "%  "); break;
+              case "pro800":
+                text = document.createTextNode(params[i + j] + ": " + (999 * ((patchData[k + 1] * 0x100 + patchData[k]) / (0xFFFF))).toFixed(0).toString(10) + "  "); break;
+              case "raw":
+                text = document.createTextNode(params[i + j] + ": 0x" + (patchData[k + 1] * 0x100 + patchData[k]).toString(16).padStart(4,0) + "  "); break;
+}
             k += 2;
             break;
           case 1: // 1-byte param, on off
@@ -413,6 +422,8 @@ document.addEventListener("DOMContentLoaded", async function() {
   shellprint = shell(log, send);
   error = message => shellprint(message, "red");
   transmit = await midi(chooser("rx"), chooser("tx"), receive);
+
+  document.getElementById("contdisplay").onchange = x => {updateInfo()}; 
 
   error("Warning: Experimental code based on undocumented midi spec.");
   error("Use at own risk.");
@@ -496,6 +507,11 @@ flex:1;
       <option value="exclusive">System Exclusive</option>
       <option value="common">Channel &amp; Common</option>
       <option value="realtime">All Messages</option>
+    </select>
+    <select id="contdisplay" title="Continuous value display">
+      <option value="percent">Percentage</option>
+      <option value="pro800">0-999</option>
+      <option value="raw">Raw hex</option>
     </select>
     </header>
     <main id="info"></main>
