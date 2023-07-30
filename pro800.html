@@ -256,7 +256,7 @@ function receive(event) {
     f = jobs.shift();
     f(event.data);
   }
-  if (event.data[0] == 0xb0) {
+  if (event.data[0] == 0xb0 && event.data[1] == 0x00) {
     refreshInfo()
   }
 }
@@ -393,13 +393,23 @@ function refreshInfo() {
   jobs.push(
     x => {
       firmware = x[10].toString(10) + "." + x[11].toString(10) + "." + x[12].toString(10);
+// Request system info
       transmit(strToBytes("F0 00 20 32 00 01 24 00 77 7E 03 F7"));
     });
 
   jobs.push(
     x => {
-      patch = [x[17], x[18]];
+// x is the system info
+// The patch number is 8-bit bytes offset 5 and 6 of the
+// system data, after the header and after the decoding. 
+// So patch number least significant 7-bit byte is x[17].
+// The 8th bit is given by the fifth bit of x[11].
+// Patch number most significant byte is x[18].
+// We keep the patch number in terms of
+// the least significant and most significant 7-bit bytes.
+      patch = [x[17], x[18] * 2 + ((x[11] & 0x20) >> 5)] ;
       deviceSysex = x;
+// Request patch sysex
       transmit(strToBytes("F0 00 20 32 00 01 24 00 77 " + patch[0].toString(16).padStart(2, "0") + " " + patch[1].toString(16).padStart(2, "0") + " F7"));
     });
 
