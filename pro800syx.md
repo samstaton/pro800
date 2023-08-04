@@ -3,6 +3,10 @@
 Attempt at reconstructing by
 [Sam](https://github.com/samstaton/pro800). I did this by probing the unit with various commands. 
 
+Thanks to Sebo Synths for finding some of the offsets. 
+
+See also [swumpf's nice browser editor](https://swumpf.com/pro800/experimental/) which uses some of this decoding, and [my very plain viewer/editor](https://raw.githack.com/samstaton/pro800/main/pro800.html).
+
 ### System exclusive head
 Every system exclusive message has the following format:
 
@@ -103,6 +107,6 @@ Patch data `details` has the following format.
 |69|FE Speed|1|Stepped|Fast,Slow|
 |70|AE Shape|1|Stepped|Lin,Exp|
 |71|Unison|1|Stepped|Off,On|
-|72|AE Speed|1|Stepped|Fast,Slow|
+|87|Unison voice pattern|7|Bytes encoding notes, or `FF` for mono unison|
 |150|Patch name|??|Text, delimited by 0||
 
