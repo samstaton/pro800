@@ -100,13 +100,16 @@ Patch data `details` has the following format.
 |62|PM Freq|1|Stepped|Off,On|
 |63|PM Filt|1|Stepped|Off,On|
 |64|LFO Shape|1|Stepped|Pulse,Tri,Rand,Sin,Noise,Saw|
-|65|???|1|Stepped|Off,On|
-|66|LFO Target|1|Stepped|Bit mask: VCO (1) / Filter (2) / VCA (4) / PW (8) / VCOA (16) / VCOB (32)|
+|65|LFO Range|1|Stepped|Slow,Fast|
+|66|LFO Target|1|Stepped|Bit mask: Freq (1) / Filter (2) / PW (4) / Osc A (8) / Osc B (16) / ?? (32) / VCA (64) |
 |67|KeyTrk|1|Stepped|Off,Half,Full|
 |68|FE Shape|1|Stepped|Lin,Exp|
 |69|FE Speed|1|Stepped|Fast,Slow|
 |70|AE Shape|1|Stepped|Lin,Exp|
 |71|Unison|1|Stepped|Off,On|
+|78|Vibrato speed|2|Continuous||
+|80|Vibrato amount|2|Continuous||
 |87|Unison voice pattern|7|Bytes encoding notes, or `FF` for mono unison|
+|148|AE Speed|1|Stepped|Fast,Slow|
 |150|Patch name|??|Text, delimited by 0||
 
