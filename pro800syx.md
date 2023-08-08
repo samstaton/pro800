@@ -109,7 +109,7 @@ Patch data `details` has the following format.
 |71|Unison|1|Stepped|Off,On|
 |78|Vibrato speed|2|Continuous||
 |80|Vibrato amount|2|Continuous||
-|87|Unison voice pattern|7|Bytes encoding notes, or `FF` for mono unison|
+|87|Unison voice pattern|7|Bytes encoding notes, as semitone intervals above the root, or `FF` for mono unison|
 |148|AE Speed|1|Stepped|Fast,Slow|
 |150|Patch name|??|Text, delimited by 0||
 
