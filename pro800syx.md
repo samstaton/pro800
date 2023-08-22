@@ -107,9 +107,19 @@ Patch data `details` has the following format.
 |69|FE Speed|1|Stepped|Fast,Slow|
 |70|AE Shape|1|Stepped|Lin,Exp|
 |71|Unison|1|Stepped|Off,On|
+|72|Pitchbend target|1|Off,VCO,VCF,Vol|
+|73|Modwheel amt|1|Stepped|Min,Low,High,Full|
+|74|OscA freq mode|1|Free,Semi,Oct,FiHD|
+|75|OscB freq mode|1|Free,Semi,Oct,FiHD|
+|76|Mod delay|2|Continuous||
+|82|Detune|2|Continuous||
 |78|Vibrato speed|2|Continuous||
 |80|Vibrato amount|2|Continuous||
+|84|Modwheel target|1|Stepped|LFO,Vib|
 |87|Unison voice pattern|7|Bytes encoding notes, as semitone intervals above the root, or `FF` for mono unison|
+|142|Noise|2|Continuous||
+|144|VCA Aftertouch|2|Continuous||
+|146|VCA Aftertouch|2|Continuous||
 |148|AE Speed|1|Stepped|Fast,Slow|
-|150|Patch name|??|Text, delimited by 0||
-
+|150|Patch name|??|Text, seems to be delimited by 0||
+|166|LFO AT amount|2|Continuous||
