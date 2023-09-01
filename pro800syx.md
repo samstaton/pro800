@@ -117,9 +117,24 @@ Patch data `details` has the following format.
 |80|Vibrato amount|2|Continuous||
 |84|Modwheel target|1|Stepped|LFO,Vib|
 |87|Unison voice pattern|7|Bytes encoding notes, as semitone intervals above the root, or `FF` for mono unison|
+|94|Per-note tuning|48|4 bytes per note (C-B). Least significant byte first. Scaling is strange. See [tuning.csv](tuning.csv) for rough values, or use examples below.
 |142|Noise|2|Continuous||
 |144|VCA Aftertouch|2|Continuous||
 |146|VCA Aftertouch|2|Continuous||
 |148|AE Speed|1|Stepped|Fast,Slow|
 |150|Patch name|??|Text, seems to be delimited by 0||
 |166|LFO AT amount|2|Continuous||
+
+##### Per-note tuning table examples: 
+
+12TET:
+`00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00`
+
+Quarter-comma meantone:
+`00 00 00 00 ae ff 7c be 62 d6 9d bd 2b 0c d7 3d 1d 3d 07 be e7 5a 03 3d 56 47 5e be e7 5a 03 bd fc db 8d be 2b 0c d7 bd 62 d6 9d 3d 98 51 35 be`
+
+Pythagorean: 
+`00 00 00 00 2b 0c d7 bd aa 50 2c 3d 88 5b 89 bd d3 13 a8 3d 4a ca b4 bc 65 1e 02 3e 4a ca b4 3c d3 13 a8 bd 88 5b 89 3d aa 50 2c bd 2b 0c d7 3d`
+
+Werckmeister III:
+`00 00 00 00 2b 0c d7 bd d3 13 a8 bd 88 5b 89 bd 2b 0c d7 bd 4a ca b4 bc 65 1e 02 be aa 50 2c bd d3 13 a8 bd 65 1e 02 be aa 50 2c bd d3 13 a8 bd`
