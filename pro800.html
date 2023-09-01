@@ -59,6 +59,63 @@ function bytesToMidi(bytes) {
   return data;
 }
 
+// Function to download data to a file
+function download(data, filename, type) {
+    var file = new Blob([data], {type: type});
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    else { // Others
+        var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
+    }
+}
+
+function savePatchData() {
+download(patchSysex,'pro800-'+(patch[1] * 0x80 + patch[0]).toString(10).padStart(3, "0")+'-'+patchName+'.syx','audio/x-midi');
+}
+
+// Change the decoded data and send it via sysex
+function editDecoded() {
+  var newData = prompt("Enter new decoded data. WARNING: sysex for data will be sent to device.", bytesToStr(patchData));
+  if (newData == null) return;
+  patchData = strToBytes(newData);
+  newPatchSysex = new Uint8Array(12 + (bytesToMidi(patchData)).length);
+  newPatchSysex.set(patchSysex.slice(0, 11));
+  newPatchSysex.set(bytesToMidi(patchData), 11);
+  newPatchSysex[11 + (bytesToMidi(patchData)).length] = 0xF7;
+  patchSysex = newPatchSysex;
+  jobs.push(x => {
+    refreshInfo();
+  })
+  transmit(patchSysex);
+}
+
+// Change the decoded data and send it via sysex
+function editFragment() {
+  const offset = Number(document.getElementById('offset').value) ;
+  const length = Number(document.getElementById('length').value );
+  var newData = prompt("Enter " + length + " bytes of (decoded) data from offset " + offset + ". WARNING: sysex for data will be sent to device.", bytesToStr(patchData.slice(offset,offset+length)));
+  if (newData == null) return;
+  for(i=0;i<length;i++) patchData[i+offset] = strToBytes(newData)[i];
+  newPatchSysex = new Uint8Array(12 + (bytesToMidi(patchData)).length);
+  newPatchSysex.set(patchSysex.slice(0, 11));
+  newPatchSysex.set(bytesToMidi(patchData), 11);
+  newPatchSysex[11 + (bytesToMidi(patchData)).length] = 0xF7;
+  patchSysex = newPatchSysex;
+  jobs.push(x => {
+    refreshInfo();
+  })
+  transmit(patchSysex);
+}
+
 // Change the patch name and send it via sysex
 function changeName() {
   var newName = prompt("New patch name. WARNING: sysex for rename will be sent to device : ", patchName);
@@ -380,8 +437,10 @@ function updateInfo() {
   info.appendChild(table);
   printInfo("Decoded patch data:");
   dumpInfo(bytesToStr(patchData));
+  printHtml("[<a href=\"javascript:editDecoded()\">edit all</a>] [<a href=\"javascript:editFragment()\">edit fragment</a>, offset: <input type=\"number\" id=\"offset\">, length: <input type=\"number\" id=\"length\">]");
   printInfo("Patch system exclusive data:");
   dumpInfo(bytesToStr(patchSysex));
+  printHtml("[<a href=\"javascript:savePatchData()\">Save</a>]");
   printInfo("Device system exclusive data:");
   dumpInfo(bytesToStr(deviceSysex));
   printInfo("Firmware version: " + firmware);
