@@ -118,7 +118,7 @@ Patch data `details` has the following format.
 |80|Vibrato amount|2|Continuous||
 |84|Modwheel target|1|Stepped|LFO,Vib|
 |87|Unison voice pattern|7|Bytes encoding notes, as semitone intervals above the root, or `FF` for mono unison|
-|94|Per-note tuning|48|4 bytes per note (C-B). Least significant byte first. Scaling is strange. See [tuning.csv](tuning.csv) for rough values, or use examples below.
+|94|Per-note tuning|48|4 bytes per note (C-B). Least significant byte first. Most significant bit of fourth bit is the sign (tuning up or down). Scaling seems strange. See [tuning.csv](tuning.csv) for rough values, or use examples below.
 |142|Noise|2|Continuous||
 |144|VCA Aftertouch|2|Continuous||
 |146|VCA Aftertouch|2|Continuous||
