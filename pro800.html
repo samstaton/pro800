@@ -126,10 +126,14 @@ function changeName() {
     nameBytes.push(utf8.charCodeAt(i));
   }
   if (newName == null) return;
+  if(patchData[4]<0x6F) { // Older versions of patches, 0 delimited patch name
   newPatchData = patchData.slice(0, 0x96);
   newPatchData.push(...nameBytes);
   newPatchData.push(...patchData.slice(0x96 + patchData.slice(0x96).indexOf(0)));
-  patchData = newPatchData;
+  patchData = newPatchData;}
+  else { // Newer versions, fixed length patch name
+  for(i=0;i<16;i++) {if(i<nameBytes.length) patchData[0x96+i]=nameBytes[i]; else patchData[0x96+i]=0;}
+  }
   newPatchSysex = new Uint8Array(12 + (bytesToMidi(patchData)).length);
   newPatchSysex.set(patchSysex.slice(0, 11));
   newPatchSysex.set(bytesToMidi(patchData), 11);
@@ -373,7 +377,10 @@ function updateInfo() {
   // data seems to start at position 11 in the sysex data 
   patchData = midiToBytes(patchSysex.slice(11, patchSysex.length));
   // patch name is position 105
-  patchName = String.fromCharCode.apply(String, patchData.slice(0x96, 0x96 + patchData.slice(0x96).indexOf(0)));
+  if(patchData[4]<0x6F)
+    patchName = String.fromCharCode.apply(String, patchData.slice(0x96, 0x96 + patchData.slice(0x96).indexOf(0)));
+  else
+    patchName = String.fromCharCode.apply(String, patchData.slice(0x96, 0xA6));
 
   // Helper to display a patch heading
   function printInfo(str) {
