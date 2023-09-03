@@ -377,7 +377,7 @@ function updateInfo() {
   // data seems to start at position 11 in the sysex data 
   patchData = midiToBytes(patchSysex.slice(11, patchSysex.length));
   // patch name is position 105
-  if(patchData[4]<0x6F)
+  if(patchData[4]<0x6F) // Patch name encoding depends on version of patch format
     patchName = String.fromCharCode.apply(String, patchData.slice(0x96, 0x96 + patchData.slice(0x96).indexOf(0)));
   else
     patchName = String.fromCharCode.apply(String, patchData.slice(0x96, 0xA6));
