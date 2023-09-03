@@ -65,6 +65,7 @@ Patch data `details` has the following format.
 
 | Offset | Operation | Num bytes | Mode | Steps |
 | --- | --- | --- | --- | --- |
+|4|Version|1|Stepped|0x6E for firmware to 1.2.7; 0x6F for firmware 1.3.6 and upwards|
 |5|Freq A|2|Continuous||
 |7|Vol A|2|Continuous||
 |9|PWA|2|Continuous||
@@ -122,8 +123,12 @@ Patch data `details` has the following format.
 |144|VCA Aftertouch|2|Continuous||
 |146|VCA Aftertouch|2|Continuous||
 |148|AE Speed|1|Stepped|Fast,Slow|
-|150|Patch name|??|Text, seems to be delimited by 0||
+|150|Patch name|??|Text, seems to be delimited by 0. In version 0x6E, the LFO AT amount is immediately after the patch name. There are reports that if there is no LFO AT amount then the 0 delimiter may be omitted. In version 0x6F, patch name is always 16 bytes, and unused bytes are 0.||
 |166|LFO AT amount|2|Continuous||
+|168|Voice spread|1|Stepped|On,Off (from version 0x6F)|
+|169|Keyboard Tracking reference note|1|Stepped|0x03=C4,0x02=C3 etc (from version 0x6F)|
+|170|Glide mode|1|Stepped|Time,Speed (from version 0x6F)|
+|171|Pitch range|2|Continuous|Default = 0x0080, i.e. 12 (from version 0x6F)|
 
 ##### Per-note tuning table examples: 
 
@@ -138,3 +143,11 @@ Pythagorean:
 
 Werckmeister III:
 `00 00 00 00 2b 0c d7 bd d3 13 a8 bd 88 5b 89 bd 2b 0c d7 bd 4a ca b4 bc 65 1e 02 be aa 50 2c bd d3 13 a8 bd 65 1e 02 be aa 50 2c bd d3 13 a8 bd`
+
+Note that the mapping from cents to values is not linear, possibly logarithmic.
+
+#### Firmware update
+
+```0A ... ```
+
+```0B ... ```
