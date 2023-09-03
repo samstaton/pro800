@@ -128,7 +128,7 @@ Patch data `details` has the following format.
 |168|Voice spread|1|Stepped|On,Off (from version 0x6F)|
 |169|Keyboard Tracking reference note|1|Stepped|0x03=C4,0x02=C3 etc (from version 0x6F)|
 |170|Glide mode|1|Stepped|Time,Speed (from version 0x6F)|
-|171|Pitch range|2|Continuous|Default = 0x0080, i.e. 12 (from version 0x6F)|
+|171|Pitch range|2|Continuous|Default = 0x00 0x60, i.e. 12 semitones. Presumably 0x0800 is one semitone. (From version 0x6F)|
 
 ##### Per-note tuning table examples: 
 
