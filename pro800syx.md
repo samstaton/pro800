@@ -3,9 +3,9 @@
 Attempt at reconstructing by
 [Sam](https://github.com/samstaton/pro800). I did this by probing the unit with various commands. 
 
-Thanks to Sebo Synths for finding some of the offsets. 
+Thanks to Sebo Synths and sw for finding some of the offsets. 
 
-See also [swumpf's nice browser editor](https://swumpf.com/pro800/experimental/) which uses some of this decoding, and [my very plain viewer/editor](https://raw.githack.com/samstaton/pro800/main/pro800.html).
+To access this, you can use [my very plain viewer/editor](https://raw.githack.com/samstaton/pro800/main/pro800.html). There are also a handful of more user-friendly controllers listed at  [gearspace](https://gearspace.com/board/electronic-music-instruments-and-electronic-music-production/1410544-pro-800-controller.html) including [swumpf's nice browser editor](https://swumpf.com/pro800/experimental/).
 
 ### System exclusive head
 Every system exclusive message has the following format:
