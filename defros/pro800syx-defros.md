@@ -1,14 +1,12 @@
 # Pro 800 System Exclusive — Defros additions
 
-In April 2026, Defros (Eindhoven) sent me the following substantially extended version
-of [pro800syx.md](pro800syx.md), with significant new findings against firmware
-1.4.6: a full MIDI CC table, parsing of the system data dump (`78 7E 03`),
-a worked example of the patch data layout in firmware format `6F`, an
-interpretation of the LFO Target bitmask, BPM byte-encoding, and discoveries
-in the Synthtribe app (Mode, AutoTunePrecision, Aftertouch VCA/VCF Polarity,
-Voice Priority).
+In April 2026, Defros (Eindhoven) sent me an extended version of
+[pro800syx.md](../pro800syx.md) with new findings against firmware 1.4.6 —
+including a MIDI CC table, parsed system data dumps, worked patch examples,
+and notes on system-area parameters.
 
-Lightly cleaned to render as markdown on GitHub but otherwise as received. As ever, use at own risk.
+Lightly cleaned to render as markdown on GitHub but otherwise as received.
+I haven't independently verified the contents; use at own risk.
 
 —Sam, 28 April 2026
 
