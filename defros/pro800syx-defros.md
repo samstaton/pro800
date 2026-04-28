@@ -1,12 +1,11 @@
 # Pro 800 System Exclusive — Defros additions
 
 In April 2026, Defros (Eindhoven) sent me an extended version of
-[pro800syx.md](../pro800syx.md) with new findings against firmware 1.4.6 —
+[pro800syx.md](../pro800syx.md) with new findings against firmware 1.4.6,
 including a MIDI CC table, parsed system data dumps, worked patch examples,
 and notes on system-area parameters.
 
-Lightly cleaned to render as markdown on GitHub but otherwise as received.
-I haven't independently verified the contents; use at own risk.
+Lightly cleaned to render as markdown on GitHub but otherwise as received. Use at own risk.
 
 —Sam, 28 April 2026
 

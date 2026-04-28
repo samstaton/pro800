@@ -5,6 +5,6 @@
 * [Mapping from cents to per-note tuning values](tuning.csv)
 * [Patches with unequal temperament](patches)
 
-**Update April 2026:** Defros (Eindhoven) sent me extended sysex notes and firmware-1.4.6 observations. Posted as received in [`defros/`](defros/) with thanks; I haven't independently verified them.
+**Update April 2026:** Defros (Eindhoven) sent me extended sysex notes and firmware-1.4.6 observations. Posted as received in [`defros/`](defros/) with thanks.
 
 See also [Pro 800 Controller discussion](https://gearspace.com/board/electronic-music-instruments-and-electronic-music-production/1410544-pro-800-controller.html) on gearspace, where there are links to some nice user-friendly editors.

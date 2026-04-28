@@ -1,9 +1,6 @@
 # Pro 800 firmware 1.4.6 — bugs and wish list
 
 Compiled by Defros (Eindhoven) against firmware 1.4.6, sent to me on 27 April 2026.
-These are his own observations — bugs he found while exploring the unit, plus
-some suggestions for the firmware authors. Posted here so they're discoverable;
-none of this has been independently reproduced by me.
 
 —Sam, 28 April 2026
 
